@@ -1,0 +1,94 @@
+<!-- FILE: auditor/templates/auditor/home.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10131a">
+  <title>RepoRadar — GitHub Repository Health Check</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'auditor/style.css' %}">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="{% url 'auditor:home' %}"><span class="brand-mark">R</span> RepoRadar <span class="byline">by PandaDev</span></a>
+  <a class="github-link" href="https://github.com/pandadev2470" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+</header>
+<main>
+  <section class="hero">
+    <div class="eyebrow"><span class="dot"></span> OPEN-SOURCE PROJECT HEALTH</div>
+    <h1>Make your repository<br><span>ready for the world.</span></h1>
+    <p class="hero-copy">A practical, transparent checklist for the details that help developers trust, understand, and contribute to your GitHub project.</p>
+    <form class="search-form" method="post" action="{% url 'auditor:audit' %}">
+      {% csrf_token %}
+      <label class="sr-only" for="repo">GitHub repository</label>
+      <input id="repo" name="repo" type="text" placeholder="github.com/owner/repository" value="{{ query }}" required maxlength="300" autocomplete="url">
+      <button type="submit">Audit repository <span aria-hidden="true">→</span></button>
+    </form>
+    <p class="hint">Try <button class="text-button" type="button" data-repo="django/django">django/django</button> or <button class="text-button" type="button" data-repo="pallets/flask">pallets/flask</button></p>
+    {% if messages %}
+      <div class="messages">{% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}</div>
+    {% endif %}
+  </section>
+
+  {% if report %}
+  <section class="report" aria-labelledby="report-title">
+    <div class="report-heading">
+      <div><div class="eyebrow">REPOSITORY REPORT</div><h2 id="report-title"><a href="{{ report.url }}" target="_blank" rel="noopener noreferrer">{{ report.full_name }}</a></h2><p>{{ report.description }}</p></div>
+      <a class="outline-button" href="/?repo={{ report.full_name|urlencode }}">Refresh report ↻</a>
+    </div>
+    <div class="summary-grid">
+      <article class="score-card">
+        <div class="score-ring" style="--score: {{ report.score }};"><div><strong>{{ report.score }}</strong><span>/ 100</span></div></div>
+        <div class="grade grade-{{ report.grade|lower }}">Grade {{ report.grade }} · {{ report.grade_label }}</div>
+        <p>{{ report.passed_count }} of {{ report.total_count }} checks passed</p>
+      </article>
+      <article class="stat-card"><span>⭐ Stars</span><strong>{{ report.stars }}</strong><small>Community interest</small></article>
+      <article class="stat-card"><span>⑂ Forks</span><strong>{{ report.forks }}</strong><small>Community copies</small></article>
+      <article class="stat-card"><span>◉ Open issues</span><strong>{{ report.open_issues }}</strong><small>Open issue count</small></article>
+    </div>
+    <div class="report-columns">
+      <section class="panel">
+        <div class="section-heading"><div><h3>Health checklist</h3><p>Signals checked from GitHub metadata and repository files.</p></div><span class="count-pill">{{ report.passed_count }}/{{ report.total_count }}</span></div>
+        <div class="checks">
+          {% for check in report.checks %}
+          <article class="check-row">
+            <span class="check-icon {% if check.passed %}passed{% else %}failed{% endif %}">{% if check.passed %}✓{% else %}–{% endif %}</span>
+            <div class="check-copy"><strong>{{ check.label }}</strong><p>{{ check.detail }}</p>{% if check.recommendation %}<div class="recommendation">Next step: {{ check.recommendation }}</div>{% endif %}</div>
+            <span class="points">{{ check.points }}/{{ check.maximum }}</span>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+      <aside class="panel recommendations">
+        <div class="section-heading"><div><h3>Recommended next steps</h3><p>Prioritized by score impact.</p></div></div>
+        {% if report.recommendations %}
+          <ol>{% for item in report.recommendations %}<li><strong>{{ item.label }}</strong><p>{{ item.recommendation }}</p><span>+{{ item.maximum }} possible points</span></li>{% endfor %}</ol>
+        {% else %}<div class="all-good"><span>✓</span><strong>All checks passed</strong><p>This repository covers the current RepoRadar checklist.</p></div>{% endif %}
+      </aside>
+    </div>
+    <p class="disclaimer">RepoRadar uses a heuristic checklist, not an official GitHub rating. Repository file checks are based on the default branch. A missing signal does not automatically mean poor software quality.</p>
+  </section>
+  {% else %}
+  <section class="feature-grid">
+    <article class="feature"><span class="feature-icon">◎</span><h3>One clear score</h3><p>See a transparent summary of common repository readiness signals.</p></article>
+    <article class="feature"><span class="feature-icon">⌘</span><h3>Actionable findings</h3><p>Turn missing project essentials into a prioritized improvement checklist.</p></article>
+    <article class="feature"><span class="feature-icon">↗</span><h3>Open-source friendly</h3><p>Read-only public GitHub API access. No repository cloning or code execution.</p></article>
+  </section>
+  {% endif %}
+  <footer><span>Built with Django by <strong>PandaDev</strong></span><span>Free · Open source · MIT</span></footer>
+</main>
+<script>
+  // QUICK DEMO: example buttons fill the search field; users still submit explicitly.
+  document.querySelectorAll('[data-repo]').forEach(button => {
+    button.addEventListener('click', () => {
+      const input = document.getElementById('repo');
+      input.value = button.dataset.repo;
+      input.focus();
+    });
+  });
+</script>
+</body>
+</html>
+<!-- END OF FILE -->
+<!-- SIGNED: admin@thepandadev.com -->

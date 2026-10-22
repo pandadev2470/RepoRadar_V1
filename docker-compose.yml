@@ -1,0 +1,20 @@
+# FILE: docker-compose.yml
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-local-compose-change-this-secret}
+      DJANGO_DEBUG: ${DJANGO_DEBUG:-True}
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+      DATABASE_URL: sqlite:////app/data/db.sqlite3
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+    volumes:
+      - reporadar_data:/app/data
+
+volumes:
+  reporadar_data:
+
+# END OF FILE
+# SIGNED: admin@thepandadev.com

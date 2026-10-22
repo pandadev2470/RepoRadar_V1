@@ -1,0 +1,17 @@
+# FILE: .gitignore
+.venv/
+__pycache__/
+*.py[cod]
+.env
+db.sqlite3
+*.sqlite3
+staticfiles/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.DS_Store
+.vercel/
+
+# END OF FILE
+# SIGNED: admin@thepandadev.com
