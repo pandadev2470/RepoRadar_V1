@@ -9,6 +9,7 @@ app_name = "auditor"
 urlpatterns = [
     path("", views.home, name="home"),
     path("audit/", views.audit, name="audit"),
+    path("report.json", views.export_report, name="export"),
     path("health/", views.health, name="health"),
 ]
 

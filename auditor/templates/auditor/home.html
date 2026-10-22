@@ -14,7 +14,8 @@
   <a class="brand" href="{% url 'auditor:home' %}"><span class="brand-mark">R</span> RepoRadar <span class="byline">by PandaDev</span></a>
   <a class="github-link" href="https://github.com/pandadev2470" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
 </header>
-<main>
+<a class="skip-link" href="#content">Skip to content</a>
+<main id="content">
   <section class="hero">
     <div class="eyebrow"><span class="dot"></span> OPEN-SOURCE PROJECT HEALTH</div>
     <h1>Make your repository<br><span>ready for the world.</span></h1>
@@ -27,7 +28,7 @@
     </form>
     <p class="hint">Try <button class="text-button" type="button" data-repo="django/django">django/django</button> or <button class="text-button" type="button" data-repo="pallets/flask">pallets/flask</button></p>
     {% if messages %}
-      <div class="messages">{% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}</div>
+      <div class="messages" role="alert">{% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}</div>
     {% endif %}
   </section>
 
@@ -35,8 +36,13 @@
   <section class="report" aria-labelledby="report-title">
     <div class="report-heading">
       <div><div class="eyebrow">REPOSITORY REPORT</div><h2 id="report-title"><a href="{{ report.url }}" target="_blank" rel="noopener noreferrer">{{ report.full_name }}</a></h2><p>{{ report.description }}</p></div>
-      <a class="outline-button" href="/?repo={{ report.full_name|urlencode }}">Refresh report ↻</a>
+      <a class="outline-button" href="/?repo={{ report.full_name|urlencode }}">View report ↻</a>
     </div>
+    <div class="report-tools">
+      <p>Branch: <strong>{{ report.default_branch }}</strong> &middot; {{ report.language }}<br>Audited {{ report.audited_at }} &middot; Cached for up to 5 minutes</p>
+      <a class="outline-button" href="{% url 'auditor:export' %}?repo={{ query|urlencode }}">Download JSON</a>
+    </div>
+    {% if report.archived %}<p class="message" role="status">This repository is archived. It may no longer receive maintenance.</p>{% endif %}
     <div class="summary-grid">
       <article class="score-card">
         <div class="score-ring" style="--score: {{ report.score }};"><div><strong>{{ report.score }}</strong><span>/ 100</span></div></div>
@@ -45,7 +51,7 @@
       </article>
       <article class="stat-card"><span>⭐ Stars</span><strong>{{ report.stars }}</strong><small>Community interest</small></article>
       <article class="stat-card"><span>⑂ Forks</span><strong>{{ report.forks }}</strong><small>Community copies</small></article>
-      <article class="stat-card"><span>◉ Open issues</span><strong>{{ report.open_issues }}</strong><small>Open issue count</small></article>
+      <article class="stat-card"><span>◉ Open issues</span><strong>{{ report.open_issues }}</strong><small>Includes pull requests</small></article>
     </div>
     <div class="report-columns">
       <section class="panel">

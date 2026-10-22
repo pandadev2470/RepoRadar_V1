@@ -10,5 +10,6 @@ class AuditorConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "auditor"
 
+
 # END OF FILE
 # SIGNED: admin@thepandadev.com

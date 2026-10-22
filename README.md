@@ -73,6 +73,7 @@ docker run --rm -p 8000:8000 \
   -e DJANGO_SECRET_KEY='replace-with-a-long-secret' \
   -e DJANGO_DEBUG=False \
   -e DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1 \
+  -e DJANGO_SECURE_SSL_REDIRECT=False \
   -e DATABASE_URL=sqlite:////app/data/db.sqlite3 \
   -v reporadar-data:/app/data \
   reporadar
@@ -120,7 +121,7 @@ reporadar/
 ## Roadmap
 
 - Compare two repository reports side by side
-- Export reports as Markdown or JSON
+- Export reports as Markdown (JSON downloads are available)
 - Add GitHub Actions badge and release freshness checks
 - Add opt-in report history with user accounts
 - Add maintainability checks for SECURITY.md and funding links
@@ -136,3 +137,14 @@ MIT.
 
 <!-- END OF FILE -->
 <!-- SIGNED: admin@thepandadev.com -->
+
+## Review updates and documentation
+
+Reports now support JSON downloads, five-minute caching, archive warnings and improved
+community-file detection. The responsive dashboard includes keyboard focus, skip
+navigation and aligned desktop/mobile footers. Production requires a strong signing
+key and explicitly configured proxy trust.
+
+See [documentation](docs/README.md), [security review](docs/SECURITY_REVIEW.md),
+[change log](docs/CHANGELOG.md), [folder tree](FOLDER_STRUCTURE.md) and
+[contributor guidance](AGENTS.md). The security review records verification limits.

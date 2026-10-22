@@ -2,13 +2,14 @@
 """Views for the RepoRadar dashboard and report."""
 
 from django.contrib import messages
-from django.shortcuts import redirect, render
 from django.http import JsonResponse
+from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
 from auditor.services import AuditError, audit_repository, parse_repo_input
 
 
+@require_http_methods(["GET"])
 def home(request):
     """Render the landing page and optionally run an audit from a query parameter."""
     report = None
@@ -34,10 +35,24 @@ def audit(request):
     return redirect(f"/?repo={owner}/{repo}")
 
 
-
 def health(request):
     """Lightweight health check for hosting platforms."""
     return JsonResponse({"status": "ok", "app": "RepoRadar"})
 
+
 # END OF FILE
 # SIGNED: admin@thepandadev.com
+
+
+@require_http_methods(["GET"])
+def export_report(request):
+    """Download the same cached report shown in the dashboard."""
+    try:
+        owner, repo = parse_repo_input(request.GET.get("repo", ""))
+        report = audit_repository(owner, repo)
+    except AuditError as exc:
+        return JsonResponse({"error": str(exc)}, status=400)
+    response = JsonResponse(report, json_dumps_params={"indent": 2})
+    response["Content-Disposition"] = f'attachment; filename="{owner}-{repo}-report.json"'
+    response["Cache-Control"] = "no-store"
+    return response

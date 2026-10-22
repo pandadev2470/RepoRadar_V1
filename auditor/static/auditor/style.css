@@ -39,3 +39,19 @@ footer{border-top:1px solid var(--line);padding:24px 0 32px;display:flex;justify
 @media(max-width:560px){main{padding:0 15px}.topbar{padding:0 15px}.byline{display:none}.hero{padding-top:54px}.search-form{flex-direction:column}.search-form button{width:100%}.feature-grid{grid-template-columns:1fr}.summary-grid{grid-template-columns:repeat(2,1fr)}.report-heading{align-items:flex-start;flex-direction:column}.score-card{grid-column:1/-1}.panel{padding:15px}footer{flex-direction:column}}
 /* END OF FILE */
 /* SIGNED: admin@thepandadev.com */
+
+/* Dashboard accessibility and alignment. */
+:root{--bg:#0b1120;--panel:#141f32;--line:#30405b;--accent:#b1a3ff;--muted:#b0bfd2}
+body{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+main{width:100%;flex:1;display:flex;flex-direction:column;margin:0 auto}
+footer{margin-top:auto;align-items:center;flex-wrap:wrap}
+footer>span{display:block}
+.hero{padding-top:64px;width:100%}
+.report-tools{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:20px;color:var(--muted);font-size:.82rem}
+.report-heading p,.check-copy p,.recommendation{overflow-wrap:anywhere}
+:focus-visible{outline:3px solid var(--mint);outline-offset:4px}
+.search-form:focus-within{border-color:var(--mint);box-shadow:0 0 0 3px #6de0b426}
+.skip-link{position:absolute;top:-70px;left:18px;background:var(--mint);color:#10131a;padding:12px;z-index:10}
+.skip-link:focus{top:10px}
+.outline-button:hover,.github-link:hover{background:#293651;border-color:var(--accent)}
+@media(max-width:560px){.report-tools{align-items:flex-start;flex-direction:column}footer{align-items:flex-start;gap:8px}}
